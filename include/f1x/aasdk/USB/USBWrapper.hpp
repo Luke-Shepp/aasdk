@@ -64,7 +64,7 @@ public:
         uint16_t wLength) override;
     int getDeviceDescriptor(libusb_device *dev, libusb_device_descriptor &desc) override;
     void handleEvents() override;
-    HotplugCallbackHandle hotplugRegisterCallback(libusb_hotplug_event events, libusb_hotplug_flag flags, int vendor_id, int product_id, int dev_class,
+    HotplugCallbackHandle hotplugRegisterCallback(libusb_hotplug_event events, int flags, int vendor_id, int product_id, int dev_class,
                                                   libusb_hotplug_callback_fn cb_fn, void *user_data) override;
     libusb_transfer* allocTransfer(int iso_packets) override;
 

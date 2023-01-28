@@ -73,7 +73,7 @@ public:
         uint16_t wLength) = 0;
     virtual int getDeviceDescriptor(libusb_device *dev, libusb_device_descriptor &desc) = 0;
     virtual void handleEvents() = 0;
-    virtual HotplugCallbackHandle hotplugRegisterCallback(libusb_hotplug_event events, libusb_hotplug_flag flags, int vendor_id, int product_id, int dev_class,
+    virtual HotplugCallbackHandle hotplugRegisterCallback(libusb_hotplug_event events, int flags, int vendor_id, int product_id, int dev_class,
                                                           libusb_hotplug_callback_fn cb_fn, void *user_data) = 0;
     virtual libusb_transfer* allocTransfer(int iso_packets) = 0;
 };

@@ -19,6 +19,15 @@
 #include <f1x/aasdk/IO/PromiseLink.hpp>
 #include <f1x/aasdk/Channel/ServiceChannel.hpp>
 
+// Ensure the correct io_service() is called based on boost version
+#ifndef GET_IO_SERVICE
+#if BOOST_VERSION >= 107000
+#define GET_IO_SERVICE(s) ((boost::asio::io_context&)(s).context())
+#else
+#define GET_IO_SERVICE(s) ((s).get_io_service())
+#endif
+#endif
+
 namespace f1x
 {
 namespace aasdk
@@ -38,7 +47,7 @@ ServiceChannel::ServiceChannel(boost::asio::io_service::strand& strand,
 
 void ServiceChannel::send(messenger::Message::Pointer message, SendPromise::Pointer promise)
 {
-    auto sendPromise = messenger::SendPromise::defer(strand_.get_io_service());
+    auto sendPromise = messenger::SendPromise::defer(GET_IO_SERVICE(strand_));
     io::PromiseLink<>::forward(*sendPromise, std::move(promise));
     messenger_->enqueueSend(std::move(message), std::move(sendPromise));
 }

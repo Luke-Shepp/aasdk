@@ -20,6 +20,14 @@
 #include <f1x/aasdk/Error/Error.hpp>
 #include <f1x/aasdk/USB/USBEndpoint.hpp>
 
+#ifndef GET_IO_SERVICE
+#if BOOST_VERSION >= 107000
+#define GET_IO_SERVICE(s) ((boost::asio::io_context&)(s).context())
+#else
+#define GET_IO_SERVICE(s) ((s).get_io_service())
+#endif
+#endif
+
 namespace f1x
 {
 namespace aasdk
@@ -58,7 +66,7 @@ void AccessoryModeQueryChain::start(DeviceHandle handle, Promise::Pointer promis
                 });
 
             this->startQuery(AccessoryModeQueryType::PROTOCOL_VERSION,
-                             std::make_shared<USBEndpoint>(usbWrapper_, strand_.get_io_service(), std::move(handle)),
+                             std::make_shared<USBEndpoint>(usbWrapper_, GET_IO_SERVICE(strand_), std::move(handle)),
                              std::move(queryPromise));
         }
     });
